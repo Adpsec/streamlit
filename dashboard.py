@@ -12,15 +12,15 @@ uri = "mongodb+srv://adrielperegrina:GdCYOSj3ouyGJXf3@musicos.7lreafi.mongodb.ne
 
 # Connect to meme MongoDB database
 
-try:
-    client = MongoClient(uri, server_api=ServerApi('1'))
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
+# try:
+#     client = MongoClient(uri, server_api=ServerApi('1'))
+#     client.admin.command('ping')
+#     print("Pinged your deployment. You successfully connected to MongoDB!")
 
-    db = client.bdnosql
-    print("MongoDB Connected successfully!")
-except:
-    print("Could not connect to MongoDB")
+#     db = client.bdnosql
+#     print("MongoDB Connected successfully!")
+# except:
+#     print("Could not connect to MongoDB")
 
 # streamlit run streamlit-mongo.py --server.enableCORS false --server.enableXsrfProtection false
 
@@ -29,7 +29,12 @@ st.title("Visualizacion de MongoDB")
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
 @st.cache_data(ttl=600)
 def get_data():
-    items = db.bdnosql_reactions.find()
+    client = MongoClient(uri, server_api=ServerApi('1'))
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+
+    db = client.bdnosql
+    items = db.dbnosql_reactions.find()
     items = list(items)  # make hashable for st.cache_data
     return items
 
@@ -45,26 +50,26 @@ print(mostrar())
 items = get_data()
 
 sidebar = st.sidebar
-sidebar.title("Adriel Eduardo Peregrina Soto")
-sidebar.write("Matricula: S20006770")
-sidebar.write("zs20006770@estudiantes.uv.mx")
-sidebar.markdown("_")
+sidebar.title("Aaron Emiliano Torres Nuñez")
+sidebar.write("Matricula: S20006726")
+sidebar.write("zs20006726@estudiantes.uv.mx")
+sidebar.markdown("___")
 
 #    
 agree = sidebar.checkbox("Ver resultados raw (json) ? ")
 if agree:
     st.header("Resultados...")
     st.write(items)
-    st.markdown("_")
+    st.markdown("___")
 
-sidebar.markdown("_")
+sidebar.markdown("___")
 sidebar.markdown("Reacciones")
 #
 agree = sidebar.checkbox("Tabla de reactions")
 if agree:
     st.subheader("Reactions...")
     st.dataframe(items)
-    st.markdown("_")
+    st.markdown("___")
 
 ############### reactions ################
 if st.sidebar.checkbox('Grafica de barras reactions'):
@@ -92,7 +97,7 @@ if st.sidebar.checkbox('Grafica de barras reactions'):
 
     # Mostrar la gráfica en Streamlit
     st.plotly_chart(fig)
-    st.markdown("_")
+    st.markdown("___")
     
 #
 def reactionsDataframe():
@@ -118,10 +123,10 @@ def grafico_pastel_reactions(datos_reactions):
 if st.sidebar.checkbox('Grafica de pastel reactions'):
     st.subheader("Cantidad de reactions por tipo, representado en gráfico de pastel:")
     grafico_pastel_reactions(datos_reactions)
-    st.markdown("_")
+    st.markdown("___")
     
 ################ comentarios ######################
-sidebar.markdown("_")
+sidebar.markdown("___")
 sidebar.markdown("Comentarios")
 
 if st.sidebar.checkbox('Tabla de comentarios'):
@@ -139,7 +144,7 @@ if st.sidebar.checkbox('Tabla de comentarios'):
 
     # Mostrar la tabla en Streamlit
     st.table(data)
-    st.markdown("_")
+    st.markdown("___")
 
 
 #histograma
@@ -163,7 +168,7 @@ def grafico_barras_agrupadas(datos_df):
 if st.sidebar.checkbox('Grafica de barras comments'):
     st.header("Cantidad de comentarios por publicacion:")
     grafico_barras_agrupadas(datos_df)
-    st.markdown("_")
+    st.markdown("___")
     
 def grafico_pastel_objetos(datos_df):
     fig = px.pie(datos_df, names='objectId')
@@ -172,11 +177,11 @@ def grafico_pastel_objetos(datos_df):
 if st.sidebar.checkbox('Grafica de pastel comments'):
     st.subheader("Cantidad de comentarios por publicacion:")
     grafico_pastel_objetos(datos_df)
-    st.markdown("_")
+    st.markdown("___")
     
     
 ############### usuarios #################
-sidebar.markdown("_")
+sidebar.markdown("___")
 sidebar.markdown("Usuarios")
 
 if st.sidebar.checkbox('Tabla de usuarios'):
@@ -193,7 +198,7 @@ if st.sidebar.checkbox('Tabla de usuarios'):
 
     # Mostrar la tabla en Streamlit
     st.table(data)
-    st.markdown("_")
+    st.markdown("___")
 
 def grafico_barras_usuarios(datos_df):
     fig = px.bar(datos_df.groupby('userId').count().reset_index(), x='userId', y='comment')
@@ -202,7 +207,7 @@ def grafico_barras_usuarios(datos_df):
 if st.sidebar.checkbox('Grafica de barras usuarios'):
     st.header("Cantidad de comentarios por usuario:")
     grafico_barras_usuarios(datos_df)
-    st.markdown("_")
+    st.markdown("___")
     
 def grafico_pastel_users(datos_df):
     fig = px.pie(datos_df, names='userId')
@@ -211,6 +216,6 @@ def grafico_pastel_users(datos_df):
 if st.sidebar.checkbox('Grafica de pastel usuarios'):
     st.header("Cantidad de comentarios por usuario:")
     grafico_pastel_users(datos_df)
-    st.markdown("_")
+    st.markdown("___")
     
-sidebar.markdown("_")
+sidebar.markdown("___")
